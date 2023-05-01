@@ -7,8 +7,10 @@ const { Item } = require("../models");
 // Create a new item
 router.post("/", authenticate, async (req, res) => {
   // handling creation of new items, runs the authenticate middleware
+  const { name, price } = req.body;
+
   try {
-    const item = await Item.create(req.body);
+    const item = await Item.create({ name, price });
     res.status(201).json(item);
   } catch (error) {
     // if try block doesn't work, then error is returned with the following message
@@ -44,7 +46,16 @@ router.get("/:id", async (req, res) => {
 
 // Update an item by ID
 router.put("/:id", authenticate, async (req, res) => {
+  const { name, price } = req.body;
+
   try {
+    const newItem = {};
+    if (name !== undefined) {
+      newItem.name = name;
+    }
+    if (price !== undefined) {
+      newItem.price = price;
+    }
     const [updated] = await Item.update(req.body, {
       where: { id: req.params.id },
     });

@@ -41,8 +41,16 @@ router.get("/:id", async (req, res) => {
 
 // Update a basket by ID
 router.put("/:id", authenticate, async (req, res) => {
-  
+  const { name, price } = req.body;
+
   try {
+    const newBasket = {};
+    if (name !== undefined) {
+      newBasket.name = name;
+    }
+    if (price !== undefined) {
+      newBasket.price = price;
+    }
     const [updated] = await Basket.update(req.body, {
       where: { id: req.params.id },
     });

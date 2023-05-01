@@ -6,8 +6,10 @@ const { Order } = require("../models");
 
 // Create a new order
 router.post("/", authenticate, async (req, res) => {
+  const { userId, orderedDate } = req.body;
+
   try {
-    const order = await Order.create(req.body);
+    const order = await Order.create({ userId, orderedDate });
     res.status(201).json(order);
   } catch (error) {
     res.status(500).json({ message: "Error creating order", error });
@@ -40,7 +42,16 @@ router.get("/:id", async (req, res) => {
 
 // Update an order by ID
 router.put("/:id", authenticate, async (req, res) => {
+  const { userId, orderedDate } = req.body;
+
   try {
+    const newOrder = {};
+    if (userId !== undefined) {
+      newOrder.userId = userId;
+    }
+    if (orderedDate !== undefined) {
+      newOrder.orderedDate = orderedDate;
+    }
     const [updated] = await Order.update(req.body, {
       where: { id: req.params.id },
     });
