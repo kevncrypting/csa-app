@@ -6,8 +6,9 @@ const { Basket, BasketItem, Item } = require("../models");
 
 // Create a new basket
 router.post("/", authenticate, async (req, res) => {
+  const { name, price } = req.body;
   try {
-    const basket = await Basket.create(req.body);
+    const basket = await Basket.create({ name, price });
     res.status(201).json(basket);
   } catch (error) {
     res.status(500).json({ message: "Error creating basket", error });
@@ -40,6 +41,7 @@ router.get("/:id", async (req, res) => {
 
 // Update a basket by ID
 router.put("/:id", authenticate, async (req, res) => {
+  
   try {
     const [updated] = await Basket.update(req.body, {
       where: { id: req.params.id },
